@@ -18,7 +18,7 @@ args = parser.parse_args()
 
 
 # Environment
-env = gym.make(args.env_name)
+env = gym.make(args.env_name, mode=None)
 env.set_params(change_partner=args.change_partner)
 
 # Agent
