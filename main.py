@@ -5,6 +5,7 @@ import gym
 import gym_rili
 import numpy as np
 from algos.rili import RILI
+from algos.ppoag import PPO
 from replay_memory import ReplayMemory
 from torch.utils.tensorboard import SummaryWriter
 
@@ -19,13 +20,16 @@ parser.add_argument('--start_eps', type=int, default=300)
 parser.add_argument('--num_eps', type=int, default=30000)
 args = parser.parse_args()
 
-
+change_partner=args.change_partner
 # Environment
 env = gym.make(args.env_name)
 env.set_params(change_partner=args.change_partner)
 
 # Agent
-agent = RILI(env.action_space, env.observation_space.shape[0], env._max_episode_steps)
+ego_agent = RILI(env.action_space, env.observation_space.shape[0], env._max_episode_steps)
+other_agent = PPO(env.observation_space.shape[0], env.action_space.shape[0], 0.0003, 0.001, 0.99, 40, 0.8, True)
+
+
 
 # Tensorboard
 folder = "runs/" + 'rili' + "/"
@@ -56,11 +60,12 @@ for i_episode in range(1, args.num_eps+1):
     episode_steps = 0
     done = False
     state = env.reset()
-
+    other_agent_action = 
     while not done:
 
         if i_episode < args.start_eps:
             action = env.action_space.sample()
+
         else:
             action = agent.select_action(state, z)
 
